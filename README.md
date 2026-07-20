@@ -281,9 +281,10 @@ A few more boundaries, stated plainly:
 ```
 pip install -e ".[dev]"
 ruff check .
+pytest --cov=state_reconciler --cov-report=term-missing
 ```
 
-Ruff is configured in `pyproject.toml`.
+The suite is written on the standard-library `unittest` framework with subtests and runs under pytest with coverage, currently at 100% across ordering, execution, convergence, cancellation, planning, and pruning.
 
 ---
 
