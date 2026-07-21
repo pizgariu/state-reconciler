@@ -2,6 +2,7 @@
 
 Declare the state you want. The loop reads the world, finds the gap, and closes it. Then it looks again to prove the gap is gone.
 
+[![CI](https://github.com/pizgariu/state-reconciler/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/pizgariu/state-reconciler/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/state-reconciler.svg)](https://pypi.org/project/state-reconciler/)
 [![Python versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://github.com/pizgariu/state-reconciler)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -284,7 +285,7 @@ ruff check .
 pytest --cov=state_reconciler --cov-report=term-missing
 ```
 
-The suite is written on the standard-library `unittest` framework with subtests and runs under pytest with coverage, currently at 100% across ordering, execution, convergence, cancellation, planning, and pruning.
+The suite is written on the standard-library `unittest` framework with subtests and runs under pytest with coverage, currently at 100% across ordering, execution, convergence, cancellation, planning, and pruning. CI lints with Ruff and runs the full suite on CPython 3.10 through 3.14, on every push to `master` and every pull request. `fail-fast` is off, so a break on one interpreter does not hide the others.
 
 ---
 
