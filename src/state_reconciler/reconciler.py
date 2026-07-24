@@ -5,6 +5,7 @@ from .cancellation import Cancellation
 from .convergence import Convergence, Once
 from .drift import Drift
 from .executor import Executor, Serial
+from .observer import Observer
 from .ordering import Kahn, Ordering
 from .step import Step
 
@@ -36,7 +37,7 @@ class Reconciler:
 
     def __init__(self, steps: Iterable[Step], ordering: Ordering | None = None, *,
                  executor: Executor | None = None, convergence: Convergence | None = None,
-                 cancellation: Cancellation | None = None):
+                 cancellation: Cancellation | None = None, observer: Observer | None = None):
         # Resolve defaults here, not as mutable default args: a default instance in the signature
         # would be built once at import and shared across every Reconciler, a trap the moment a
         # default holds state (a pool, a flag).
@@ -44,6 +45,7 @@ class Reconciler:
         executor = executor or Serial()
         convergence = convergence or Once()
         cancellation = cancellation or Cancellation()
+        observer = observer or Observer()
         # The executor builds and verifies the partition shape it can run (Serial: a serial walk of
         # levels, Parallel: independent waves, Pipeline: independent chains). An executor that cannot
         # run the Ordering it was handed raises from arrange(), naming the fix.
@@ -51,6 +53,7 @@ class Reconciler:
         self.__executor = executor
         self.__convergence = convergence
         self.__cancellation = cancellation
+        self.__observer = observer
 
     def drift(self) -> list[Drift]:
         # Flatten every step's drift, in resolved order. [] == fully in desired state.
@@ -99,9 +102,14 @@ class Reconciler:
         applied: list[Drift] = []
 
         def cycle() -> list[Drift]:
+            self.__observer.began()
             applied_this_pass, failures = self.__execute(self.__partition, lambda step: step.apply())
             applied.extend(applied_this_pass)
-            return failures + self.drift()
+            self.__observer.acted(applied_this_pass)
+
+            residual = failures + self.drift()
+            self.__observer.remained(residual)
+            return residual
 
         return Residual(self.__convergence(cycle), applied)
 

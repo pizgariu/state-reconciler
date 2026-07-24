@@ -31,6 +31,7 @@ from .cancellation import (
 from .convergence import Convergence, Fixpoint, Once
 from .drift import Drift, DriftItem
 from .executor import Executor, OnError, Parallel, Pipeline, Serial
+from .observer import Chorus, Observer
 from .ordering import DFS, Components, Kahn, Ordering, Priority
 from .partition import Chains, Levels, Partition, Placement
 from .reconciler import Controller, Reconciler, Residual
@@ -44,4 +45,5 @@ __all__ = [
     "Cancelled", "Cancellation", "Deadline", "Flag", "Rule", "Some", "Every", "Most", "Quorum", "AnyOf", "AllOf", "Majority",
     "Convergence", "Once", "Fixpoint",
     "Residual", "Reconciler", "Controller",
+    "Observer", "Chorus",
 ]
